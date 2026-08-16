@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SKM AI Automation — AI, Automation &amp; Software, Built for Real-World Impact</title>
+<meta name="description" content="SKM AI Automation helps businesses use AI and automation to cut repetitive work, connect disconnected systems, and build reliable, scalable software.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #090f24;
+    --bg-soft: #0c1430;
+    --surface: #101a3d;
+    --surface-2: #131f47;
+    --line: #212f5e;
+    --line-soft: #1a2650;
+    --text: #eef1ff;
+    --text-muted: #8b93bd;
+    --text-faint: #5b6390;
+    --cyan: #2fe0c9;
+    --blue: #4a7bf7;
+    --blue-deep: #2b4dc2;
+    --radius: 14px;
+    --max: 1160px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x:hidden;
+  }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity:0.3;
+    mask-image: radial-gradient(ellipse 120% 60% at 50% 0%, black 0%, transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+  body::after{
+    content:"";
+    position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    opacity:0.5;
+    mix-blend-mode: overlay;
+    pointer-events:none;
+    z-index:1;
+  }
+  .glow{
+    position:absolute;
+    border-radius:50%;
+    filter: blur(90px);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+
+  .wrap{ max-width: var(--max); margin:0 auto; padding:0 32px; position:relative; z-index:1; }
+
+  /* ---------- utility ---------- */
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--cyan);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:18px; height:1px;
+    background: var(--cyan);
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 24px;
+    border-radius:999px;
+    font-size:14px; font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background: linear-gradient(120deg, var(--cyan), var(--blue));
+    color:#06102a;
+    border:1px solid transparent;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 30px -8px rgba(47,224,201,0.45); }
+  .btn-ghost{
+    background:transparent;
+    color: var(--text);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{ border-color: var(--cyan); color: var(--cyan); }
+
+  .btn:focus-visible, a:focus-visible, button:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px;
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background: rgba(9,15,36,0.78);
+    backdrop-filter: blur(14px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  nav{
+    max-width: var(--max); margin:0 auto; padding:14px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-badge{
+    width:42px; height:42px; border-radius:11px;
+    background: linear-gradient(160deg, #f7f9ff, #e7ecfb);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+    padding:6px;
+    box-shadow: inset 0 0 0 1px rgba(20,30,70,0.06);
+  }
+  .brand-badge img{ width:100%; height:100%; object-fit:contain; }
+  .brand-name{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px; line-height:1.15; }
+  .brand-sub{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-faint); letter-spacing:0.08em; }
+
+  .nav-links{ display:flex; align-items:center; gap:36px; }
+  .nav-links a{ font-size:14px; color:var(--text-muted); transition:color .2s ease; }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-cta{ display:flex; align-items:center; gap:16px; }
+
+  .nav-toggle{ display:none; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:96px 0 80px; position:relative; }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(34px, 4.6vw, 58px);
+    line-height:1.06;
+    margin-bottom:22px;
+  }
+  .hero h1 .accent{
+    background: linear-gradient(120deg, var(--cyan), var(--blue));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .hero p.lede{
+    font-size:17px;
+    color:var(--text-muted);
+    max-width:520px;
+    margin-bottom:34px;
+  }
+  .hero-actions{ display:flex; gap:14px; margin-bottom:40px; flex-wrap:wrap; }
+
+  .hero-tags{ display:flex; gap:10px; flex-wrap:wrap; }
+  .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--text-muted);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 12px;
+  }
+
+  /* ---------- signature: pipeline visual ---------- */
+  .pipeline-card{
+    background: linear-gradient(180deg, var(--surface), var(--bg-soft));
+    border:1px solid var(--line);
+    border-radius: 20px;
+    padding:26px 22px 20px;
+    position:relative;
+  }
+  .pipeline-label{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; color:var(--text-faint);
+    margin-bottom:14px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .pipeline-label span.state{ color:var(--cyan); }
+  .pipeline-svg{ width:100%; height:auto; display:block; }
+
+  .pulse{ animation: dash-move 3.2s linear infinite; }
+  @keyframes dash-move{ to{ stroke-dashoffset:-120; } }
+  .glow-dot{ animation: glow-pulse 2.4s ease-in-out infinite; }
+  @keyframes glow-pulse{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
+  .jitter{ animation: jitter-move 5s ease-in-out infinite; }
+  @keyframes jitter-move{
+    0%,100%{ transform:translate(0,0); }
+    25%{ transform:translate(1.5px,-2px); }
+    50%{ transform:translate(-1px,1.5px); }
+    75%{ transform:translate(1px,1px); }
+  }
+
+  /* ---------- section shell ---------- */
+  section{ padding:96px 0; position:relative; border-top:1px solid var(--line-soft); }
+  .section-head{ max-width:640px; margin-bottom:56px; }
+  .section-head h2{ font-size:clamp(26px,3vw,38px); margin-bottom:16px; }
+  .section-head p{ color:var(--text-muted); font-size:16px; }
+
+  /* ---------- capability strip ---------- */
+  .strip{
+    display:flex; align-items:center; flex-wrap:wrap;
+    gap:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+  }
+  .strip-label{
+    color:var(--cyan);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    font-size:11px;
+    margin-right:6px;
+  }
+  .strip-item{ color:var(--text-muted); }
+  .strip-dot{ color:var(--text-faint); }
+
+  /* ---------- services (circuit list) ---------- */
+  .services{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:1px;
+    background: var(--line-soft);
+    border:1px solid var(--line-soft);
+    border-radius: var(--radius);
+    overflow:hidden;
+  }
+  .service{
+    background: var(--surface);
+    padding:28px 24px;
+    position:relative;
+    transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .service:hover{
+    background: var(--surface-2);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px -18px rgba(0,0,0,0.55);
+    z-index:2;
+  }
+  .service:hover .service-icon{ color: var(--blue); transform: translateY(-1px); }
+  .service-icon{ transition: color .25s ease, transform .25s ease; }
+  .service-id{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color: var(--text-faint);
+    margin-bottom:22px;
+    display:block;
+  }
+  .service-icon{
+    width:34px; height:34px;
+    margin-bottom:18px;
+    color: var(--cyan);
+  }
+  .service h3{ font-size:15.5px; font-weight:600; margin-bottom:8px; line-height:1.3; }
+  .service p{ font-size:13.5px; color:var(--text-muted); line-height:1.55; }
+
+  /* ---------- projects ---------- */
+  .mono-inline{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.86em;
+    color:var(--cyan);
+    background: var(--surface);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:1px 7px;
+  }
+  .projects-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:24px;
+  }
+  .project-card{
+    background: var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius: var(--radius);
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .project-card:hover{
+    transform: translateY(-4px);
+    border-color: var(--line);
+    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6);
+  }
+  .project-shot{
+    aspect-ratio: 16/10;
+    width:100%;
+    overflow:hidden;
+    background: var(--bg-soft);
+    border-bottom:1px solid var(--line-soft);
+    position:relative;
+  }
+  .project-shot img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
+  .project-card:hover .project-shot img{ transform:scale(1.04); }
+  .project-status{
+    position:absolute; top:10px; left:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
+    background: rgba(9,15,36,0.75);
+    border:1px solid var(--line);
+    color: var(--cyan);
+    padding:4px 9px;
+    border-radius:999px;
+    backdrop-filter: blur(4px);
+  }
+  .project-body{ padding:22px 22px 24px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .project-cat{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; }
+  .project-body h3{ font-size:16.5px; }
+  .project-body p{ font-size:13.5px; color:var(--text-muted); line-height:1.55; flex:1; }
+  .project-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
+  .project-tags span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px; color:var(--text-muted);
+    border:1px solid var(--line); border-radius:999px;
+    padding:3px 9px;
+  }
+  .project-link{
+    margin-top:6px;
+    font-size:13px; font-weight:600; color:var(--cyan);
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .project-card.empty{
+    align-items:center; justify-content:center; text-align:center;
+    padding:40px 24px; gap:8px; color:var(--text-muted);
+    border-style:dashed;
+  }
+  .project-card.empty .plus{
+    width:34px; height:34px; border-radius:50%;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; color:var(--cyan); margin-bottom:6px;
+  }
+
+  @media (max-width: 920px){
+    .projects-grid{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px){
+    .projects-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- approach ---------- */
+  .approach{
+    display:grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap:64px;
+    align-items:start;
+  }
+  .approach p{ color:var(--text-muted); font-size:16px; margin-bottom:18px; max-width:480px; }
+  .approach-list{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line-soft); }
+  .approach-row{
+    display:grid; grid-template-columns: 140px 1fr;
+    gap:24px;
+    padding:22px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .approach-row .k{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); padding-top:2px; }
+  .approach-row .v{ font-size:15px; color:var(--text-muted); }
+  .approach-row .v b{ color:var(--text); font-weight:600; }
+
+  /* ---------- why us / pillars ---------- */
+  .pillars{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:0;
+    position:relative;
+  }
+  .pillar{
+    padding:32px 30px;
+    border:1px solid var(--line-soft);
+    margin-left:-1px;
+    position:relative;
+    background: var(--bg-soft);
+    transition: background .25s ease, transform .25s ease;
+  }
+  .pillar:hover{ background: var(--surface-2); transform: translateY(-3px); z-index:2; }
+  .pillar::before{
+    content:"";
+    position:absolute; top:32px; left:30px;
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1px solid var(--line);
+  }
+  .pillar-icon{
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px;
+    position:relative;
+  }
+  .pillar-icon svg{ width:18px; height:18px; color:var(--cyan); }
+  .pillar h3{ font-size:18px; margin-bottom:10px; }
+  .pillar p{ font-size:14.5px; color:var(--text-muted); }
+
+  /* ---------- cta / footer ---------- */
+  .cta{
+    border-top:1px solid var(--line-soft);
+    padding:100px 0 80px;
+    text-align:left;
+  }
+  .cta-inner{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
+    flex-wrap:wrap;
+    padding-bottom:56px;
+    border-bottom:1px solid var(--line-soft);
+    margin-bottom:40px;
+  }
+  .cta h2{ font-size:clamp(28px,4vw,46px); max-width:600px; }
+  .contact-email{
+    margin-top:20px;
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+  }
+  .contact-email .mono{ color:var(--cyan); font-size:15px; }
+  .contact-email a{ color:var(--text-muted); border-bottom:1px solid var(--line); padding-bottom:2px; transition:color .2s ease, border-color .2s ease; }
+  .contact-email a:hover{ color:var(--cyan); border-color:var(--cyan); }
+  .cta-actions{ display:flex; gap:14px; flex-wrap:wrap; align-self:flex-end; }
+
+  footer{ padding:0 0 48px; }
+  .footer-grid{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:20px;
+  }
+  .footer-brand{ display:flex; align-items:center; gap:12px; }
+  .footer-links{ display:flex; gap:28px; }
+  .footer-links a{ font-size:13px; color:var(--text-muted); }
+  .footer-links a:hover{ color:var(--text); }
+  .footer-note{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-faint); }
+
+  @media (max-width: 920px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .services{ grid-template-columns: repeat(2,1fr); }
+    .approach{ grid-template-columns:1fr; gap:36px; }
+    .pillars{ grid-template-columns:1fr; }
+    .pillar{ margin-left:0; }
+    .nav-links{ display:none; }
+  }
+  @media (max-width: 560px){
+    .wrap{ padding:0 20px; }
+    nav{ padding:14px 20px; }
+    .services{ grid-template-columns:1fr; }
+    .approach-row{ grid-template-columns:1fr; gap:6px; }
+    .cta-inner{ align-items:flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .pulse, .glow-dot, .jitter{ animation:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a class="brand" href="#top">
+      <span class="brand-badge"><img src="images/logo.png" alt="SKM AI Automation logo"></span>
+      <span>
+        <span class="brand-name" style="display:block;">SKM AI Automation</span>
+        <span class="brand-sub">AI AUTOMATION SOLUTIONS</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#work">What we do</a>
+      <a href="#projects">Projects</a>
+      <a href="#approach">Approach</a>
+      <a href="#why">Why us</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#contact">Start a project</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" style="border-top:none; padding-top:88px;">
+    <span class="glow" style="width:520px; height:520px; top:-180px; left:-160px; background:radial-gradient(circle, rgba(47,224,201,0.16), transparent 70%);"></span>
+    <span class="glow" style="width:460px; height:460px; top:20px; right:-180px; background:radial-gradient(circle, rgba(74,123,247,0.14), transparent 70%);"></span>
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">AI · Automation · Software</div>
+        <h1>Turn repetitive work into <span class="accent">reliable systems.</span></h1>
+        <p class="lede">SKM AI Automation helps businesses use AI and automation to cut manual work, connect disconnected systems, and build software that holds up in production — not AI for the sake of AI.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">Start a project</a>
+          <a class="btn btn-ghost" href="#work">See what we build</a>
+        </div>
+        <div class="hero-tags">
+          <span class="tag">#business-automation</span>
+          <span class="tag">#ai-integrations</span>
+          <span class="tag">#custom-software</span>
+        </div>
+      </div>
+
+      <div class="pipeline-card">
+        <div class="pipeline-label"><span>manual_workflow.trace</span><span class="state">● automated</span></div>
+        <svg class="pipeline-svg" viewBox="0 0 480 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- chaotic left side -->
+          <g class="jitter">
+            <line x1="30" y1="60" x2="80" y2="110" stroke="#2a3568" stroke-width="1.3"/>
+            <line x1="80" y1="110" x2="40" y2="150" stroke="#2a3568" stroke-width="1.3"/>
+            <line x1="40" y1="150" x2="95" y2="190" stroke="#2a3568" stroke-width="1.3"/>
+            <line x1="30" y1="60" x2="95" y2="190" stroke="#2a3568" stroke-width="1.3"/>
+            <line x1="80" y1="110" x2="35" y2="230" stroke="#2a3568" stroke-width="1.3"/>
+            <line x1="95" y1="190" x2="70" y2="250" stroke="#2a3568" stroke-width="1.3"/>
+          </g>
+          <circle cx="30" cy="60" r="4.5" fill="#4a5490"/>
+          <circle cx="80" cy="110" r="4.5" fill="#4a5490"/>
+          <circle cx="40" cy="150" r="4.5" fill="#4a5490"/>
+          <circle cx="95" cy="190" r="4.5" fill="#4a5490"/>
+          <circle cx="35" cy="230" r="4.5" fill="#4a5490"/>
+          <circle cx="70" cy="250" r="4.5" fill="#4a5490"/>
+
+          <!-- convergence path -->
+          <path d="M110 155 C 170 155, 190 150, 230 150" stroke="#33407a" stroke-width="1.4" stroke-dasharray="4 5"/>
+
+          <!-- clean right pipeline -->
+          <line x1="230" y1="150" x2="450" y2="150" stroke="url(#lineGrad)" stroke-width="2"/>
+          <line x1="230" y1="150" x2="450" y2="150" stroke="#c8fff5" stroke-width="2" stroke-dasharray="4 12" class="pulse" opacity="0.9"/>
+
+          <g>
+            <circle cx="230" cy="150" r="7" fill="#0c1430" stroke="#2fe0c9" stroke-width="2" class="glow-dot"/>
+            <circle cx="300" cy="150" r="7" fill="#0c1430" stroke="#2fe0c9" stroke-width="2" class="glow-dot" style="animation-delay:.4s"/>
+            <circle cx="370" cy="150" r="7" fill="#0c1430" stroke="#4a7bf7" stroke-width="2" class="glow-dot" style="animation-delay:.8s"/>
+            <circle cx="450" cy="150" r="8" fill="#2fe0c9"/>
+          </g>
+
+          <text x="222" y="120" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#5b6390">scattered inputs</text>
+          <text x="450" y="120" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#2fe0c9">deployed &amp; running</text>
+
+          <text x="230" y="185" font-family="JetBrains Mono, monospace" font-size="9" fill="#5b6390">ingest</text>
+          <text x="290" y="185" font-family="JetBrains Mono, monospace" font-size="9" fill="#5b6390">automate</text>
+          <text x="360" y="185" font-family="JetBrains Mono, monospace" font-size="9" fill="#5b6390">integrate</text>
+
+          <defs>
+            <linearGradient id="lineGrad" x1="230" y1="0" x2="450" y2="0" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#2fe0c9"/>
+              <stop offset="1" stop-color="#4a7bf7"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CAPABILITY STRIP ================= -->
+  <section style="padding:44px 0; border-top:1px solid var(--line-soft);">
+    <div class="wrap">
+      <div class="strip">
+        <span class="strip-label">Where it shows up</span>
+        <span class="strip-item">Workflow engines</span>
+        <span class="strip-dot">·</span>
+        <span class="strip-item">LLM &amp; AI APIs</span>
+        <span class="strip-dot">·</span>
+        <span class="strip-item">CRM &amp; ERP systems</span>
+        <span class="strip-dot">·</span>
+        <span class="strip-item">Messaging &amp; support tools</span>
+        <span class="strip-dot">·</span>
+        <span class="strip-item">Internal dashboards</span>
+        <span class="strip-dot">·</span>
+        <span class="strip-item">Data pipelines</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHAT WE DO ================= -->
+  <section id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">What we do</div>
+        <h2>Eight ways we remove friction from how you work.</h2>
+        <p>Every engagement starts with a real business problem — these are the tools we reach for once we understand it.</p>
+      </div>
+
+      <div class="services">
+        <div class="service">
+          <span class="service-id">01</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12a8 8 0 1 1 16 0 8 8 0 0 1-16 0Z"/><path d="M12 8v4l3 2"/></svg>
+          <h3>AI-powered business automation</h3>
+          <p>Replace manual, repeatable work with systems that run themselves.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">02</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+          <h3>Custom AI solutions &amp; integrations</h3>
+          <p>Models and tooling built around your data, not a generic wrapper.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">03</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v10H8l-4 4V4Z"/></svg>
+          <h3>Intelligent chatbots &amp; AI assistants</h3>
+          <p>Assistants that handle real requests, not scripted small talk.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">04</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h10"/><circle cx="19" cy="18" r="2"/></svg>
+          <h3>Workflow &amp; process automation</h3>
+          <p>Multi-step operations reduced to a single, dependable trigger.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">05</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+          <h3>Data analytics &amp; machine learning</h3>
+          <p>Turn raw operational data into decisions you can act on.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">06</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+          <h3>Custom software &amp; app development</h3>
+          <p>Purpose-built products where off-the-shelf tools fall short.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">07</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></svg>
+          <h3>API &amp; third-party integrations</h3>
+          <p>Your tools, talking to each other without manual handoffs.</p>
+        </div>
+        <div class="service">
+          <span class="service-id">08</span>
+          <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4Z"/></svg>
+          <h3>AI in existing business systems</h3>
+          <p>Add intelligence to the software you already run on.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Projects</div>
+        <h2>A look at what we've built.</h2>
+      </div>
+
+      <div id="projects-grid" class="projects-grid" aria-live="polite">
+        <p class="mono" style="color:var(--text-faint); font-size:13px;">Loading projects…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= APPROACH ================= -->
+  <section id="approach">
+    <div class="wrap approach">
+      <div>
+        <div class="eyebrow">Our approach</div>
+        <h2 style="font-size:clamp(24px,2.8vw,32px); margin-bottom:20px;">Engineering first. AI where it earns its place.</h2>
+        <p>We combine software engineering, artificial intelligence, automation, and data-driven decision-making to build solutions that hold up outside a demo.</p>
+        <p>We automate repetitive processes and build intelligent applications to improve productivity, speed, and scalability — using AI when it's the better tool, and conventional software when it isn't.</p>
+      </div>
+      <div class="approach-list">
+        <div class="approach-row">
+          <div class="k">DIAGNOSE</div>
+          <div class="v"><b>Understand the process</b> — where time is lost, where systems don't talk to each other, and what "done" actually looks like.</div>
+        </div>
+        <div class="approach-row">
+          <div class="k">DESIGN</div>
+          <div class="v"><b>Choose the right tool</b> — AI where it gives a meaningful advantage, standard software where it's simply the better solution.</div>
+        </div>
+        <div class="approach-row">
+          <div class="k">BUILD</div>
+          <div class="v"><b>Ship working software</b> — engineered for reliability, not a one-off prototype that breaks under real usage.</div>
+        </div>
+        <div class="approach-row">
+          <div class="k">SCALE</div>
+          <div class="v"><b>Design for growth</b> — maintainable systems that keep working as your data, traffic, and team grow.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHY US ================= -->
+  <section id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Why SKM AI Automation</div>
+        <h2>Three things we hold ourselves to, on every project.</h2>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <h3>Solve the right problem</h3>
+          <p>Technology is only valuable when it addresses a genuine business need. We start there, not with the tool.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></svg></div>
+          <h3>Automate intelligently</h3>
+          <p>We use AI where it provides a meaningful advantage, and conventional software where that's the better solution.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18M6 20V10M12 20V4M18 20v-7"/></svg></div>
+          <h3>Build for growth</h3>
+          <p>Every solution is designed with reliability, maintainability, and future scalability in mind — not just launch day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA / CONTACT ================= -->
+  <section id="contact" class="cta" style="position:relative; overflow:hidden;">
+    <span class="glow" style="width:480px; height:480px; bottom:-220px; left:50%; transform:translateX(-50%); background:radial-gradient(circle, rgba(47,224,201,0.12), transparent 70%);"></span>
+    <div class="wrap">
+      <div class="cta-inner">
+        <div>
+          <h2>Repetitive processes, disconnected systems, or AI you haven't put to work yet — let's turn it into a working solution.</h2>
+          <div class="contact-email">
+          </div>
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="mailto:skm.ai.automations@gmail.com">Contact us</a>
+          <a class="btn btn-ghost" href="#work">Review our services</a>
+        </div>
+      </div>
+
+      <footer>
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <span class="brand-badge"><img src="images/logo.png" alt="SKM AI Automation logo"></span>
+            <span class="footer-note">SKM AI AUTOMATION — AI. AUTOMATION. SOFTWARE.</span>
+          </div>
+          <div class="footer-links">
+            <a href="#work">What we do</a>
+            <a href="#approach">Approach</a>
+            <a href="#why">Why us</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  var grid = document.getElementById('projects-grid');
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function render(projects){
+    if (!projects || !projects.length){
+      grid.innerHTML = '<div class="project-card empty"><div class="plus">+</div><p>No projects yet. Add one in <span class="mono-inline">projects.json</span>.</p></div>';
+      return;
+    }
+    var html = projects.map(function(p){
+      var tags = (p.tags || []).map(function(t){ return '<span>' + escapeHtml(t) + '</span>'; }).join('');
+      var linkHtml = p.link
+        ? '<a class="project-link" href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener">View project →</a>'
+        : '';
+      return (
+        '<div class="project-card">' +
+          '<div class="project-shot">' +
+            (p.status ? '<span class="project-status">' + escapeHtml(p.status) + '</span>' : '') +
+            '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.title) + ' screenshot" loading="lazy">' +
+          '</div>' +
+          '<div class="project-body">' +
+            '<span class="project-cat">' + escapeHtml(p.category || '') + '</span>' +
+            '<h3>' + escapeHtml(p.title) + '</h3>' +
+            '<p>' + escapeHtml(p.description || '') + '</p>' +
+            '<div class="project-tags">' + tags + '</div>' +
+            linkHtml +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+    grid.innerHTML = html;
+  }
+
+  fetch('projects.json')
+    .then(function(res){
+      if (!res.ok) throw new Error('Could not load projects.json');
+      return res.json();
+    })
+    .then(render)
+    .catch(function(){
+      grid.innerHTML =
+        '<div class="project-card empty">' +
+          '<div class="plus">i</div>' +
+          '<p>Projects couldn\'t be loaded. If you\'re opening this file directly, run it through a local server (or your live site) so <span class="mono-inline">projects.json</span> can be fetched.</p>' +
+        '</div>';
+    });
+})();
+</script>
+
+</body>
+</html>
