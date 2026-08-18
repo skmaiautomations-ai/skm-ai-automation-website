@@ -339,6 +339,11 @@
     grid-template-columns: repeat(3, 1fr);
     gap:24px;
   }
+  .projects-see-all{
+    display:flex;
+    justify-content:center;
+    margin-top:36px;
+  }
   .project-card{
     background: var(--surface);
     border:1px solid var(--line-soft);
@@ -557,6 +562,68 @@
     font-size:16px; color:var(--cyan); flex-shrink:0;
   }
 
+  /* ---------- testimonials ---------- */
+  .reviews-row{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:22px;
+  }
+  .review-card{
+    background: var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius: var(--radius);
+    padding:24px 22px;
+    display:flex; flex-direction:column; gap:14px;
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .review-card:hover{ transform:translateY(-3px); border-color:var(--line); }
+  .review-stars{ display:flex; gap:3px; }
+  .review-stars svg{ width:14px; height:14px; fill:var(--cyan); }
+  .review-stars svg.dim{ fill:var(--line); }
+  .review-quote{ font-size:14px; color:var(--text-muted); line-height:1.6; flex:1; }
+  .review-quote::before{ content:"“"; color:var(--cyan); }
+  .review-quote::after{ content:"”"; color:var(--cyan); }
+  .review-author{ display:flex; flex-direction:column; gap:2px; padding-top:6px; border-top:1px solid var(--line-soft); }
+  .review-name{ font-size:13.5px; font-weight:600; color:var(--text); }
+  .review-role{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-faint); }
+  .review-cta{ display:flex; justify-content:center; margin-top:32px; }
+  .review-form-card{
+    margin-top:44px;
+    background: var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius: var(--radius);
+    overflow:hidden;
+  }
+  .review-form-head{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    padding:18px 22px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .review-form-head h3{ font-size:15px; }
+  .review-form-newtab{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color: var(--cyan);
+  }
+  .review-form-newtab:hover{ color: var(--blue); }
+  .review-form-frame{
+    width:100%;
+    height:1100px;
+    border:none;
+    display:block;
+    background:#fff;
+  }
+  @media (max-width: 560px){
+    .review-form-frame{ height:1250px; }
+  }
+
+  @media (max-width: 920px){
+    .reviews-row{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px){
+    .reviews-row{ grid-template-columns: 1fr; }
+  }
+
   /* ---------- cta / footer ---------- */
   .cta{
     border-top:1px solid var(--line-soft);
@@ -643,6 +710,7 @@
       <a href="#approach">Approach</a>
       <a href="#why">Why us</a>
       <a href="#clients">Clients</a>
+      <a href="#testimonials">Testimonials</a>
       <a href="#contact">Contact</a>
     </div>
     <div class="nav-cta">
@@ -817,6 +885,7 @@
       <div id="projects-grid" class="projects-grid" aria-live="polite">
         <p class="mono" style="color:var(--text-faint); font-size:13px;">Loading projects…</p>
       </div>
+      <div id="projects-see-all" class="projects-see-all"></div>
     </div>
   </section>
 
@@ -902,6 +971,33 @@
     </div>
   </section>
 
+  <!-- ================= TESTIMONIALS ================= -->
+  <section id="testimonials">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Testimonials</div>
+        <h2>What people say after working with us.</h2>
+        <p>Loaded from <code class="mono-inline">reviews.json</code>. Submissions below go straight into a private Google Sheet — add the ones you want featured here.</p>
+      </div>
+      <div id="reviews-row" class="reviews-row" aria-live="polite">
+        <p class="mono" style="color:var(--text-faint); font-size:13px;">Loading reviews…</p>
+      </div>
+      <div class="review-form-card">
+        <div class="review-form-head">
+          <h3>Leave a review or ask a question</h3>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdB1itjwVc00506m31I0zyvplWjTo2UewGycakwldm-MwftBA/viewform" target="_blank" rel="noopener" class="review-form-newtab">Open in new tab ↗</a>
+        </div>
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSdB1itjwVc00506m31I0zyvplWjTo2UewGycakwldm-MwftBA/viewform?embedded=true"
+          class="review-form-frame"
+          loading="lazy"
+          title="SKM AI Automation reviews and questions form">
+          Loading form…
+        </iframe>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= CTA / CONTACT ================= -->
   <section id="contact" class="cta" style="position:relative; overflow:hidden;">
     <span class="glow" style="width:480px; height:480px; bottom:-220px; left:50%; transform:translateX(-50%); background:radial-gradient(circle, rgba(47,224,201,0.12), transparent 70%);"></span>
@@ -955,6 +1051,16 @@
 <script>
 (function(){
   var grid = document.getElementById('projects-grid');
+  var seeAllBox = document.getElementById('projects-see-all');
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
 
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, function(c){
@@ -1049,7 +1155,18 @@
       if (!res.ok) throw new Error('Could not load projects.json');
       return res.json();
     })
-    .then(render)
+    .then(function(allProjects){
+      if (allProjects && allProjects.length > 3){
+        render(shuffle(allProjects).slice(0, 3));
+        seeAllBox.innerHTML = '<button type="button" class="btn btn-ghost" id="see-all-projects-btn">See all ' + allProjects.length + ' projects</button>';
+        document.getElementById('see-all-projects-btn').addEventListener('click', function(){
+          render(allProjects);
+          seeAllBox.innerHTML = '';
+        });
+      } else {
+        render(allProjects);
+      }
+    })
     .catch(function(){
       grid.innerHTML =
         '<div class="project-card empty">' +
@@ -1091,6 +1208,56 @@
       row.innerHTML =
         '<div class="clients-empty"><div class="plus">+</div>' +
         '<p>No client logos added yet. Add <span class="mono-inline">clients.json</span> to the root once a project ships.</p></div>';
+    });
+})();
+
+(function(){
+  var row = document.getElementById('reviews-row');
+  if (!row) return;
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function starsHtml(rating){
+    rating = Math.max(0, Math.min(5, Number(rating) || 5));
+    var out = '';
+    for (var i = 1; i <= 5; i++){
+      out += '<svg viewBox="0 0 20 20" class="' + (i <= rating ? '' : 'dim') + '"><path d="M10 1.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L10 14.7l-5.2 2.8 1-5.8L1.6 7.6l5.8-.8L10 1.5Z"/></svg>';
+    }
+    return out;
+  }
+
+  function render(reviews){
+    if (!reviews || !reviews.length){
+      row.innerHTML =
+        '<div class="clients-empty"><div class="plus">+</div>' +
+        '<p>No reviews featured yet. Add one in <span class="mono-inline">reviews.json</span> once you have a real one to share.</p></div>';
+      return;
+    }
+    row.innerHTML = reviews.map(function(r){
+      return (
+        '<div class="review-card">' +
+          '<div class="review-stars">' + starsHtml(r.rating) + '</div>' +
+          '<p class="review-quote">' + escapeHtml(r.quote || '') + '</p>' +
+          '<div class="review-author">' +
+            '<span class="review-name">' + escapeHtml(r.name || 'Anonymous') + '</span>' +
+            (r.role ? '<span class="review-role">' + escapeHtml(r.role) + '</span>' : '') +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  fetch('reviews.json')
+    .then(function(res){ if (!res.ok) throw new Error('missing'); return res.json(); })
+    .then(render)
+    .catch(function(){
+      row.innerHTML =
+        '<div class="clients-empty"><div class="plus">+</div>' +
+        '<p>No reviews featured yet. Add <span class="mono-inline">reviews.json</span> to the root once you have a real one to share.</p></div>';
     });
 })();
 </script>
