@@ -362,6 +362,35 @@
   }
   .project-shot img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
   .project-card:hover .project-shot img{ transform:scale(1.04); }
+  .gallery-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:28px; height:28px; border-radius:50%;
+    background: rgba(9,15,36,0.65);
+    border:1px solid var(--line);
+    color: var(--text);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    opacity:0; transition: opacity .2s ease, background .2s ease;
+    z-index:2;
+  }
+  .gallery-nav svg{ width:14px; height:14px; }
+  .project-shot:hover .gallery-nav{ opacity:1; }
+  .gallery-nav:hover{ background: rgba(9,15,36,0.9); }
+  .gallery-prev{ left:8px; }
+  .gallery-next{ right:8px; }
+  .gallery-dots{
+    position:absolute; bottom:9px; left:50%; transform:translateX(-50%);
+    display:flex; gap:5px;
+    z-index:2;
+  }
+  .gallery-dot{
+    width:5px; height:5px; border-radius:50%;
+    background: rgba(255,255,255,0.4);
+    cursor:pointer;
+    transition: background .2s ease, transform .2s ease;
+    border:none; padding:0;
+  }
+  .gallery-dot.active{ background: var(--cyan); transform:scale(1.35); }
   .project-status{
     position:absolute; top:10px; left:10px;
     display:flex; align-items:center; gap:5px;
@@ -497,6 +526,37 @@
   .pillar h3{ font-size:18px; margin-bottom:10px; }
   .pillar p{ font-size:14.5px; color:var(--text-muted); }
 
+  /* ---------- clients ---------- */
+  .clients-row{
+    display:flex; flex-wrap:wrap; align-items:center; gap:16px;
+  }
+  .client-logo{
+    height:64px; width:150px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:12px;
+    padding:14px 20px;
+    transition: border-color .25s ease, transform .25s ease;
+  }
+  .client-logo:hover{ border-color:var(--line); transform:translateY(-2px); }
+  .client-logo img{ max-width:100%; max-height:100%; object-fit:contain; filter:grayscale(1) brightness(1.6); opacity:0.85; transition:filter .25s ease, opacity .25s ease; }
+  .client-logo:hover img{ filter:none; opacity:1; }
+  .clients-empty{
+    display:flex; align-items:center; gap:12px;
+    padding:20px 22px;
+    border:1px dashed var(--line);
+    border-radius:12px;
+    color: var(--text-muted);
+    font-size:14px;
+  }
+  .clients-empty .plus{
+    width:30px; height:30px; border-radius:50%;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; color:var(--cyan); flex-shrink:0;
+  }
+
   /* ---------- cta / footer ---------- */
   .cta{
     border-top:1px solid var(--line-soft);
@@ -582,6 +642,7 @@
       <a href="#projects">Projects</a>
       <a href="#approach">Approach</a>
       <a href="#why">Why us</a>
+      <a href="#clients">Clients</a>
       <a href="#contact">Contact</a>
     </div>
     <div class="nav-cta">
@@ -827,6 +888,20 @@
     </div>
   </section>
 
+  <!-- ================= CLIENTS ================= -->
+  <section id="clients">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Clients</div>
+        <h2>Businesses we've worked with.</h2>
+        <p>Loaded from <code class="mono-inline">clients.json</code> — add a logo the same way you add a project.</p>
+      </div>
+      <div id="clients-row" class="clients-row" aria-live="polite">
+        <p class="mono" style="color:var(--text-faint); font-size:13px;">Loading clients…</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= CTA / CONTACT ================= -->
   <section id="contact" class="cta" style="position:relative; overflow:hidden;">
     <span class="glow" style="width:480px; height:480px; bottom:-220px; left:50%; transform:translateX(-50%); background:radial-gradient(circle, rgba(47,224,201,0.12), transparent 70%);"></span>
@@ -892,17 +967,36 @@
       grid.innerHTML = '<div class="project-card empty"><div class="plus">+</div><p>No projects yet. Add one in <span class="mono-inline">projects.json</span>.</p></div>';
       return;
     }
-    var html = projects.map(function(p){
+    var html = projects.map(function(p, pIdx){
       var tags = (p.tags || []).map(function(t){ return '<span>' + escapeHtml(t) + '</span>'; }).join('');
       var linkHtml = p.link
         ? '<a class="project-link" href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener">View project →</a>'
         : '';
       var statusClass = (p.status || '').toLowerCase() === 'sample' ? ' is-sample' : '';
+
+      // Supports either "images": [...] (multiple screenshots) or the older single "image" field.
+      var imgs = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+      var navHtml = '';
+      var dotsHtml = '';
+      if (imgs.length > 1){
+        navHtml =
+          '<button type="button" class="gallery-nav gallery-prev" data-dir="-1" aria-label="Previous screenshot">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>' +
+          '</button>' +
+          '<button type="button" class="gallery-nav gallery-next" data-dir="1" aria-label="Next screenshot">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>' +
+          '</button>';
+        dotsHtml = '<div class="gallery-dots">' + imgs.map(function(_, i){
+          return '<button type="button" class="gallery-dot' + (i === 0 ? ' active' : '') + '" data-i="' + i + '" aria-label="Screenshot ' + (i+1) + '"></button>';
+        }).join('') + '</div>';
+      }
+
       return (
         '<div class="project-card">' +
-          '<div class="project-shot">' +
+          '<div class="project-shot" data-project="' + pIdx + '">' +
             (p.status ? '<span class="project-status' + statusClass + '">' + escapeHtml(p.status) + '</span>' : '') +
-            '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.title) + ' screenshot" loading="lazy">' +
+            '<img src="' + escapeHtml(imgs[0] || '') + '" alt="' + escapeHtml(p.title) + ' screenshot" loading="lazy">' +
+            navHtml + dotsHtml +
           '</div>' +
           '<div class="project-body">' +
             '<span class="project-cat">' + escapeHtml(p.category || '') + '</span>' +
@@ -915,6 +1009,39 @@
       );
     }).join('');
     grid.innerHTML = html;
+
+    // Wire up prev/next arrows and dots for any card with multiple screenshots.
+    var shots = grid.querySelectorAll('.project-shot');
+    shots.forEach(function(shot){
+      var pIdx = Number(shot.getAttribute('data-project'));
+      var imgs = (projects[pIdx].images && projects[pIdx].images.length)
+        ? projects[pIdx].images
+        : (projects[pIdx].image ? [projects[pIdx].image] : []);
+      if (imgs.length < 2) return;
+
+      var current = 0;
+      var imgEl = shot.querySelector('img');
+      var dotEls = shot.querySelectorAll('.gallery-dot');
+
+      function show(i){
+        current = (i + imgs.length) % imgs.length;
+        imgEl.src = imgs[current];
+        dotEls.forEach(function(d, j){ d.classList.toggle('active', j === current); });
+      }
+
+      shot.querySelectorAll('.gallery-nav').forEach(function(btn){
+        btn.addEventListener('click', function(e){
+          e.preventDefault(); e.stopPropagation();
+          show(current + Number(btn.getAttribute('data-dir')));
+        });
+      });
+      dotEls.forEach(function(dot, j){
+        dot.addEventListener('click', function(e){
+          e.preventDefault(); e.stopPropagation();
+          show(j);
+        });
+      });
+    });
   }
 
   fetch('projects.json')
@@ -929,6 +1056,41 @@
           '<div class="plus">i</div>' +
           '<p>Projects couldn\'t be loaded. If you\'re opening this file directly, run it through a local server (or your live site) so <span class="mono-inline">projects.json</span> can be fetched.</p>' +
         '</div>';
+    });
+})();
+
+(function(){
+  var row = document.getElementById('clients-row');
+  if (!row) return;
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function render(clients){
+    if (!clients || !clients.length){
+      row.innerHTML =
+        '<div class="clients-empty"><div class="plus">+</div>' +
+        '<p>No client logos added yet. Add one in <span class="mono-inline">clients.json</span> once a project ships.</p></div>';
+      return;
+    }
+    row.innerHTML = clients.map(function(c){
+      var img = '<img src="' + escapeHtml(c.logo) + '" alt="' + escapeHtml(c.name) + '" loading="lazy">';
+      return c.url
+        ? '<a class="client-logo" href="' + escapeHtml(c.url) + '" target="_blank" rel="noopener">' + img + '</a>'
+        : '<span class="client-logo">' + img + '</span>';
+    }).join('');
+  }
+
+  fetch('clients.json')
+    .then(function(res){ if (!res.ok) throw new Error('missing'); return res.json(); })
+    .then(render)
+    .catch(function(){
+      row.innerHTML =
+        '<div class="clients-empty"><div class="plus">+</div>' +
+        '<p>No client logos added yet. Add <span class="mono-inline">clients.json</span> to the root once a project ships.</p></div>';
     });
 })();
 </script>
