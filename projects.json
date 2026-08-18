@@ -4,7 +4,7 @@
     "category": "AI Automations",
     "description": "I engineered an end-to-end multi-agent healthcare logistics platform using n8n to automate patient scheduling and administrative operations. By combining conversational AI with event-driven backend pipelines, the system reduces manual data entry, scheduling friction, and provides real-time operational visibility.",
     "tags": ["Automation", "Integrations", "Customer support", "Lead gen"],
-    "image": "images/hospital appointments patient side.png","image/booking list.png",
+    "image": "images/hospital appointments patient side.png",
     "link": "",
     "status": "Demo"
   }
