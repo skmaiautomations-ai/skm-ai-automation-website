@@ -1,23 +1,5 @@
 [
   {
-    "title": "Ops Dashboard",
-    "category": "Workflow automation",
-    "description": "Sample tile — replace with a real project. A live dashboard that replaced manual status spreadsheets with automated, real-time reporting.",
-    "tags": ["Automation", "Dashboards", "Internal tools"],
-    "image": "images/ops-dashboard.png",
-    "link": "",
-    "status": "Sample"
-  },
-  {
-    "title": "Support Assistant",
-    "category": "AI chatbot",
-    "description": "Sample tile — replace with a real project. An AI assistant that resolves common support requests and hands off complex ones to a human.",
-    "tags": ["AI assistant", "Customer support"],
-    "image": "images/support-assistant.png",
-    "link": "",
-    "status": "Sample"
-  },
-  {
     "title": "Automated Healthcare Logistics Platform Using n8n",
     "category": "AI Automations",
     "description": "I engineered an end-to-end multi-agent healthcare logistics platform using n8n to automate patient scheduling and administrative operations. By combining conversational AI with event-driven backend pipelines, the system reduces manual data entry, scheduling friction, and provides real-time operational visibility.",
