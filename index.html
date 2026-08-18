@@ -5,6 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SKM AI Automation — AI, Automation &amp; Software, Built for Real-World Impact</title>
 <meta name="description" content="SKM AI Automation helps businesses use AI and automation to cut repetitive work, connect disconnected systems, and build reliable, scalable software.">
+<link rel="canonical" href="https://skmaiautomation.netlify.app/">
+<link rel="icon" type="image/png" href="images/logo.png">
+
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="SKM AI Automation — AI, Automation & Software, Built for Real-World Impact">
+<meta property="og:description" content="AI and automation solutions that cut repetitive work, connect disconnected systems, and build reliable, scalable software for real businesses.">
+<meta property="og:image" content="https://skmaiautomation.netlify.app/images/logo.png">
+<meta property="og:url" content="https://skmaiautomation.netlify.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SKM AI Automation">
+<meta name="twitter:description" content="AI and automation solutions built for real-world impact.">
+<meta name="twitter:image" content="https://skmaiautomation.netlify.app/images/logo.png">
+
+<!-- Structured data: helps Google understand this is a business -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "SKM AI Automation",
+  "description": "SKM AI Automation helps businesses use AI and automation to reduce repetitive work, improve operational efficiency, and build smarter digital products.",
+  "url": "https://skmaiautomation.netlify.app/",
+  "logo": "https://skmaiautomation.netlify.app/images/logo.png",
+  "email": "skm.ai.automations@gmail.com",
+  "areaServed": "Worldwide",
+  "sameAs": ["https://www.linkedin.com/company/141553938"],
+  "serviceType": [
+    "AI-powered business automation",
+    "Custom AI solutions and integrations",
+    "Intelligent chatbots and AI assistants",
+    "Workflow and process automation",
+    "Data analytics and machine learning solutions",
+    "Custom software and application development",
+    "API and third-party service integrations"
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -113,6 +150,12 @@
     border:1px solid var(--line);
   }
   .btn-ghost:hover{ border-color: var(--cyan); color: var(--cyan); }
+  .btn-whatsapp{
+    background: #1fae5d;
+    color: #ffffff;
+    border:1px solid transparent;
+  }
+  .btn-whatsapp:hover{ transform:translateY(-2px); box-shadow:0 10px 30px -8px rgba(31,174,93,0.5); }
 
   .btn:focus-visible, a:focus-visible, button:focus-visible{
     outline:2px solid var(--cyan);
@@ -321,15 +364,25 @@
   .project-card:hover .project-shot img{ transform:scale(1.04); }
   .project-status{
     position:absolute; top:10px; left:10px;
+    display:flex; align-items:center; gap:5px;
     font-family:'JetBrains Mono',monospace;
     font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
     background: rgba(9,15,36,0.75);
     border:1px solid var(--line);
     color: var(--cyan);
-    padding:4px 9px;
+    padding:4px 10px 4px 8px;
     border-radius:999px;
     backdrop-filter: blur(4px);
   }
+  .project-status::before{
+    content:"";
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+  }
+  .project-status.is-sample{ color: var(--text-muted); }
+  .project-status.is-sample::before{ background: var(--text-faint); box-shadow:none; }
   .project-body{ padding:22px 22px 24px; display:flex; flex-direction:column; gap:10px; flex:1; }
   .project-cat{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.06em; }
   .project-body h3{ font-size:16.5px; }
@@ -365,24 +418,51 @@
     .projects-grid{ grid-template-columns: 1fr; }
   }
 
-  /* ---------- approach ---------- */
-  .approach{
+  /* ---------- approach: numbered timeline ---------- */
+  .timeline{
     display:grid;
-    grid-template-columns: 0.9fr 1.1fr;
-    gap:64px;
-    align-items:start;
+    grid-template-columns: repeat(5, 1fr);
+    gap:0;
+    position:relative;
   }
-  .approach p{ color:var(--text-muted); font-size:16px; margin-bottom:18px; max-width:480px; }
-  .approach-list{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line-soft); }
-  .approach-row{
-    display:grid; grid-template-columns: 140px 1fr;
-    gap:24px;
-    padding:22px 0;
-    border-bottom:1px solid var(--line-soft);
+  .timeline-track{
+    position:absolute;
+    top:19px; left:calc(10% - 1px); right:calc(10% - 1px);
+    height:1px;
+    background: var(--line-soft);
+    z-index:0;
   }
-  .approach-row .k{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan); padding-top:2px; }
-  .approach-row .v{ font-size:15px; color:var(--text-muted); }
-  .approach-row .v b{ color:var(--text); font-weight:600; }
+  .timeline-step{
+    position:relative;
+    z-index:1;
+    padding:0 18px 0 0;
+  }
+  .timeline-num{
+    width:38px; height:38px;
+    border-radius:50%;
+    background: var(--bg);
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color: var(--cyan);
+    margin-bottom:18px;
+    transition: border-color .25s ease, color .25s ease, background .25s ease;
+  }
+  .timeline-step:hover .timeline-num{
+    border-color: var(--cyan);
+    background: var(--surface-2);
+  }
+  .timeline-step h3{ font-size:16px; margin-bottom:8px; }
+  .timeline-step p{ font-size:13.5px; color:var(--text-muted); line-height:1.55; }
+
+  @media (max-width: 920px){
+    .timeline{ grid-template-columns: 1fr 1fr; gap:32px 20px; }
+    .timeline-track{ display:none; }
+  }
+  @media (max-width: 560px){
+    .timeline{ grid-template-columns: 1fr; gap:28px; }
+  }
 
   /* ---------- why us / pillars ---------- */
   .pillars{
@@ -451,6 +531,17 @@
   .footer-links{ display:flex; gap:28px; }
   .footer-links a{ font-size:13px; color:var(--text-muted); }
   .footer-links a:hover{ color:var(--text); }
+  .footer-social{ display:flex; align-items:center; gap:14px; }
+  .footer-social a{
+    width:34px; height:34px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--text-muted);
+    transition: color .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .footer-social a svg{ width:16px; height:16px; }
+  .footer-social a:hover{ color: var(--cyan); border-color: var(--cyan); transform: translateY(-2px); }
   .footer-note{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-faint); }
 
   @media (max-width: 920px){
@@ -670,29 +761,39 @@
 
   <!-- ================= APPROACH ================= -->
   <section id="approach">
-    <div class="wrap approach">
-      <div>
+    <div class="wrap">
+      <div class="section-head">
         <div class="eyebrow">Our approach</div>
-        <h2 style="font-size:clamp(24px,2.8vw,32px); margin-bottom:20px;">Engineering first. AI where it earns its place.</h2>
-        <p>We combine software engineering, artificial intelligence, automation, and data-driven decision-making to build solutions that hold up outside a demo.</p>
-        <p>We automate repetitive processes and build intelligent applications to improve productivity, speed, and scalability — using AI when it's the better tool, and conventional software when it isn't.</p>
+        <h2>Engineering first. AI where it earns its place.</h2>
+        <p>We combine software engineering, artificial intelligence, automation, and data-driven decision-making to build solutions that hold up outside a demo — using AI when it's the better tool, and conventional software when it isn't.</p>
       </div>
-      <div class="approach-list">
-        <div class="approach-row">
-          <div class="k">DIAGNOSE</div>
-          <div class="v"><b>Understand the process</b> — where time is lost, where systems don't talk to each other, and what "done" actually looks like.</div>
+
+      <div class="timeline">
+        <div class="timeline-track"></div>
+        <div class="timeline-step">
+          <div class="timeline-num">01</div>
+          <h3>Diagnose</h3>
+          <p>Understand the process — where time is lost, where systems don't talk to each other, and what "done" actually looks like.</p>
         </div>
-        <div class="approach-row">
-          <div class="k">DESIGN</div>
-          <div class="v"><b>Choose the right tool</b> — AI where it gives a meaningful advantage, standard software where it's simply the better solution.</div>
+        <div class="timeline-step">
+          <div class="timeline-num">02</div>
+          <h3>Design</h3>
+          <p>Choose the right tool — AI where it gives a meaningful advantage, standard software where it's simply the better solution.</p>
         </div>
-        <div class="approach-row">
-          <div class="k">BUILD</div>
-          <div class="v"><b>Ship working software</b> — engineered for reliability, not a one-off prototype that breaks under real usage.</div>
+        <div class="timeline-step">
+          <div class="timeline-num">03</div>
+          <h3>Build</h3>
+          <p>Ship working software — engineered for reliability, not a one-off prototype that breaks under real usage.</p>
         </div>
-        <div class="approach-row">
-          <div class="k">SCALE</div>
-          <div class="v"><b>Design for growth</b> — maintainable systems that keep working as your data, traffic, and team grow.</div>
+        <div class="timeline-step">
+          <div class="timeline-num">04</div>
+          <h3>Test</h3>
+          <p>Validate against real data and edge cases before anything touches production — no surprises after launch.</p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-num">05</div>
+          <h3>Scale</h3>
+          <p>Design for growth — maintainable systems that keep working as your data, traffic, and team grow.</p>
         </div>
       </div>
     </div>
@@ -738,6 +839,10 @@
         </div>
         <div class="cta-actions">
           <a class="btn btn-primary" href="mailto:skm.ai.automations@gmail.com">Contact us</a>
+          <a class="btn btn-whatsapp" href="https://wa.me/923363738940" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.33 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.06h-.01a8.15 8.15 0 0 1-4.16-1.14l-.3-.18-3.11.82.83-3.03-.19-.31a8.13 8.13 0 0 1-1.25-4.31c0-4.5 3.66-8.16 8.19-8.16 2.19 0 4.24.85 5.79 2.4a8.12 8.12 0 0 1 2.4 5.78c0 4.5-3.67 8.13-8.19 8.13Zm4.48-6.13c-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.78.97-.14.16-.29.18-.53.06-.24-.12-1.03-.38-1.96-1.21-.72-.65-1.21-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.29.37-.43.12-.14.16-.24.24-.4.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.43.06-.65.31-.22.24-.86.84-.86 2.05 0 1.21.88 2.37 1 2.53.12.16 1.73 2.64 4.19 3.7.59.25 1.05.4 1.4.51.59.19 1.13.16 1.55.1.47-.07 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z"/></svg>
+            WhatsApp
+          </a>
           <a class="btn btn-ghost" href="#work">Review our services</a>
         </div>
       </div>
@@ -753,6 +858,17 @@
             <a href="#approach">Approach</a>
             <a href="#why">Why us</a>
             <a href="#contact">Contact</a>
+          </div>
+          <div class="footer-social">
+            <a href="https://wa.me/923363738940" target="_blank" rel="noopener" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.33 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.06h-.01a8.15 8.15 0 0 1-4.16-1.14l-.3-.18-3.11.82.83-3.03-.19-.31a8.13 8.13 0 0 1-1.25-4.31c0-4.5 3.66-8.16 8.19-8.16 2.19 0 4.24.85 5.79 2.4a8.12 8.12 0 0 1 2.4 5.78c0 4.5-3.67 8.13-8.19 8.13Zm4.48-6.13c-.24-.12-1.45-.72-1.68-.8-.22-.08-.39-.12-.55.12-.16.24-.63.8-.78.97-.14.16-.29.18-.53.06-.24-.12-1.03-.38-1.96-1.21-.72-.65-1.21-1.44-1.35-1.68-.14-.24-.02-.37.11-.49.11-.11.24-.29.37-.43.12-.14.16-.24.24-.4.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.43.06-.65.31-.22.24-.86.84-.86 2.05 0 1.21.88 2.37 1 2.53.12.16 1.73 2.64 4.19 3.7.59.25 1.05.4 1.4.51.59.19 1.13.16 1.55.1.47-.07 1.45-.59 1.65-1.16.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/141553938" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+            </a>
+            <a href="mailto:skm.ai.automations@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h18v12H3V6Z"/><path d="m3 7 9 6 9-6"/></svg>
+            </a>
           </div>
         </div>
       </footer>
@@ -781,10 +897,11 @@
       var linkHtml = p.link
         ? '<a class="project-link" href="' + escapeHtml(p.link) + '" target="_blank" rel="noopener">View project →</a>'
         : '';
+      var statusClass = (p.status || '').toLowerCase() === 'sample' ? ' is-sample' : '';
       return (
         '<div class="project-card">' +
           '<div class="project-shot">' +
-            (p.status ? '<span class="project-status">' + escapeHtml(p.status) + '</span>' : '') +
+            (p.status ? '<span class="project-status' + statusClass + '">' + escapeHtml(p.status) + '</span>' : '') +
             '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.title) + ' screenshot" loading="lazy">' +
           '</div>' +
           '<div class="project-body">' +
