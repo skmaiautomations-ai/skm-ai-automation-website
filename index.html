@@ -600,22 +600,67 @@
     border-bottom:1px solid var(--line-soft);
   }
   .review-form-head h3{ font-size:15px; }
-  .review-form-newtab{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    color: var(--cyan);
+
+  .native-form{ display:flex; flex-direction:column; gap:20px; padding:24px 22px 26px; }
+  .nf-row{ display:flex; flex-direction:column; gap:8px; }
+  .nf-row label{ font-size:13px; font-weight:600; color:var(--text); }
+  .nf-row label .req{ color:var(--cyan); }
+  .native-form input[type="text"],
+  .native-form input[type="email"],
+  .native-form textarea,
+  .native-form select{
+    background: var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 14px;
+    color: var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    outline:none;
+    transition: border-color .2s ease;
   }
-  .review-form-newtab:hover{ color: var(--blue); }
-  .review-form-frame{
-    width:100%;
-    height:1100px;
-    border:none;
-    display:block;
-    background:#fff;
+  .native-form input:focus,
+  .native-form textarea:focus,
+  .native-form select:focus{ border-color: var(--cyan); }
+  .native-form textarea{ resize:vertical; min-height:90px; }
+  .native-form select{ appearance:none; }
+
+  .nf-segmented{ display:flex; gap:8px; flex-wrap:wrap; }
+  .nf-seg-btn{
+    padding:9px 16px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    font-size:13px; font-weight:600;
+    cursor:pointer;
+    transition: all .2s ease;
   }
-  @media (max-width: 560px){
-    .review-form-frame{ height:1250px; }
+  .nf-seg-btn:hover{ border-color: var(--cyan); color: var(--text); }
+  .nf-seg-btn.active{ background: linear-gradient(120deg, var(--cyan), var(--blue)); color:#06102a; border-color:transparent; }
+
+  .nf-star-rating{ display:flex; gap:6px; }
+  .nf-star{
+    background:none; border:none; cursor:pointer;
+    font-size:26px; line-height:1;
+    color: var(--line);
+    transition: color .15s ease, transform .15s ease;
   }
+  .nf-star:hover{ transform: scale(1.15); }
+  .nf-star.active{ color: var(--cyan); }
+
+  .nf-checkboxes{ display:flex; flex-direction:column; gap:9px; }
+  .nf-check{
+    display:flex; align-items:center; gap:9px;
+    font-size:13.5px; color:var(--text-muted);
+    cursor:pointer;
+  }
+  .nf-check input{ accent-color: var(--cyan); width:15px; height:15px; }
+
+  .nf-submit{ align-self:flex-start; margin-top:6px; }
+  .nf-status{ font-size:13px; margin-top:4px; min-height:18px; }
+  .nf-status.ok{ color: var(--cyan); }
+  .nf-status.err{ color:#ff8a8a; }
 
   @media (max-width: 920px){
     .reviews-row{ grid-template-columns: 1fr 1fr; }
@@ -963,6 +1008,7 @@
       <div class="section-head">
         <div class="eyebrow">Clients</div>
         <h2>Businesses we've worked with.</h2>
+        <p>Loaded from <code class="mono-inline">clients.json</code> — add a logo the same way you add a project.</p>
       </div>
       <div id="clients-row" class="clients-row" aria-live="polite">
         <p class="mono" style="color:var(--text-faint); font-size:13px;">Loading clients…</p>
@@ -976,6 +1022,7 @@
       <div class="section-head">
         <div class="eyebrow">Testimonials</div>
         <h2>What people say after working with us.</h2>
+        <p>Loaded from <code class="mono-inline">reviews.json</code>. Submissions below go straight into a private Google Sheet — add the ones you want featured here.</p>
       </div>
       <div id="reviews-row" class="reviews-row" aria-live="polite">
         <p class="mono" style="color:var(--text-faint); font-size:13px;">Loading reviews…</p>
@@ -983,15 +1030,78 @@
       <div class="review-form-card">
         <div class="review-form-head">
           <h3>Leave a review or ask a question</h3>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdB1itjwVc00506m31I0zyvplWjTo2UewGycakwldm-MwftBA/viewform" target="_blank" rel="noopener" class="review-form-newtab">Open in new tab ↗</a>
         </div>
-        <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLSdB1itjwVc00506m31I0zyvplWjTo2UewGycakwldm-MwftBA/viewform?embedded=true"
-          class="review-form-frame"
-          loading="lazy"
-          title="SKM AI Automation reviews and questions form">
-          Loading form…
-        </iframe>
+
+        <form id="native-review-form" class="native-form" novalidate>
+          <div class="nf-row">
+            <label for="nf-name">Name <span class="req">*</span></label>
+            <input type="text" id="nf-name" name="name" placeholder="Your full name" required>
+          </div>
+
+          <div class="nf-row">
+            <label for="nf-email">Email <span class="req">*</span></label>
+            <input type="email" id="nf-email" name="email" placeholder="you@example.com" required>
+          </div>
+
+          <div class="nf-row">
+            <label>Type <span class="req">*</span></label>
+            <div class="nf-segmented" data-field="type" role="radiogroup">
+              <button type="button" class="nf-seg-btn" data-value="Review">Review</button>
+              <button type="button" class="nf-seg-btn" data-value="Question">Question</button>
+            </div>
+          </div>
+
+          <div class="nf-row">
+            <label>Rating <span class="req">*</span></label>
+            <div class="nf-star-rating" data-field="rating">
+              <button type="button" class="nf-star" data-value="1" aria-label="1 star">★</button>
+              <button type="button" class="nf-star" data-value="2" aria-label="2 stars">★</button>
+              <button type="button" class="nf-star" data-value="3" aria-label="3 stars">★</button>
+              <button type="button" class="nf-star" data-value="4" aria-label="4 stars">★</button>
+              <button type="button" class="nf-star" data-value="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+
+          <div class="nf-row">
+            <label for="nf-message">Message</label>
+            <textarea id="nf-message" name="message" rows="4" placeholder="Tell us more..."></textarea>
+          </div>
+
+          <div class="nf-row">
+            <label for="nf-area">Which area are you most interested in?</label>
+            <select id="nf-area" name="area">
+              <option value="">Choose (optional)</option>
+              <option>Customer Support Chatbots</option>
+              <option>Workflow Automation</option>
+              <option>Data Analysis &amp; Reporting</option>
+              <option>Lead Generation</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="nf-row">
+            <label>How did you hear about us?</label>
+            <div class="nf-checkboxes" data-field="source">
+              <label class="nf-check"><input type="checkbox" value="Social Media"> Social Media</label>
+              <label class="nf-check"><input type="checkbox" value="Referral"> Referral</label>
+              <label class="nf-check"><input type="checkbox" value="Online Search"> Online Search</label>
+              <label class="nf-check"><input type="checkbox" value="Email Newsletter"> Email Newsletter</label>
+              <label class="nf-check"><input type="checkbox" value="Other"> Other</label>
+            </div>
+          </div>
+
+          <div class="nf-row">
+            <label>Interested in a free consultation call?</label>
+            <div class="nf-segmented" data-field="consult" role="radiogroup">
+              <button type="button" class="nf-seg-btn" data-value="Yes, please contact me">Yes</button>
+              <button type="button" class="nf-seg-btn" data-value="Maybe later">Maybe later</button>
+              <button type="button" class="nf-seg-btn" data-value="No, thank you">No thanks</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary nf-submit">Submit</button>
+          <p class="nf-status" id="nf-status"></p>
+        </form>
       </div>
     </div>
   </section>
@@ -1257,6 +1367,100 @@
         '<div class="clients-empty"><div class="plus">+</div>' +
         '<p>No reviews featured yet. Add <span class="mono-inline">reviews.json</span> to the root once you have a real one to share.</p></div>';
     });
+})();
+
+(function(){
+  var form = document.getElementById('native-review-form');
+  if (!form) return;
+
+  var status = document.getElementById('nf-status');
+
+  // Field IDs confirmed from a real pre-filled link on 2026-08-19.
+  var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSdB1itjwVc00506m31I0zyvplWjTo2UewGycakwldm-MwftBA/formResponse';
+  var ENTRY = {
+    name:    'entry.131459030',
+    email:   'entry.1522449081',
+    type:    'entry.335266797',
+    rating:  'entry.1342302240',
+    message: 'entry.106208887',
+    area:    'entry.63558600',
+    source:  'entry.1502015875',
+    consult: 'entry.557465917'
+  };
+
+  document.querySelectorAll('.nf-segmented').forEach(function(group){
+    group.querySelectorAll('.nf-seg-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        group.querySelectorAll('.nf-seg-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        group.dataset.selected = btn.dataset.value;
+      });
+    });
+  });
+
+  var starGroup = document.querySelector('.nf-star-rating');
+  starGroup.querySelectorAll('.nf-star').forEach(function(star){
+    star.addEventListener('click', function(){
+      var val = Number(star.dataset.value);
+      starGroup.dataset.selected = val;
+      starGroup.querySelectorAll('.nf-star').forEach(function(s){
+        s.classList.toggle('active', Number(s.dataset.value) <= val);
+      });
+    });
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    var name = document.getElementById('nf-name').value.trim();
+    var email = document.getElementById('nf-email').value.trim();
+    var type = document.querySelector('.nf-segmented[data-field="type"]').dataset.selected;
+    var rating = starGroup.dataset.selected;
+
+    if (!name || !email || !type || !rating){
+      status.textContent = 'Please fill in Name, Email, Type, and Rating.';
+      status.className = 'nf-status err';
+      return;
+    }
+
+    var message = document.getElementById('nf-message').value.trim();
+    var area = document.getElementById('nf-area').value;
+    var consult = document.querySelector('.nf-segmented[data-field="consult"]').dataset.selected || '';
+    var sources = Array.prototype.map.call(
+      document.querySelectorAll('.nf-checkboxes input:checked'),
+      function(cb){ return cb.value; }
+    );
+
+    var body = new URLSearchParams();
+    body.append(ENTRY.name, name);
+    body.append(ENTRY.email, email);
+    body.append(ENTRY.type, type);
+    body.append(ENTRY.rating, rating);
+    if (message) body.append(ENTRY.message, message);
+    if (area) body.append(ENTRY.area, area);
+    if (consult) body.append(ENTRY.consult, consult);
+    sources.forEach(function(s){ body.append(ENTRY.source, s); });
+
+    fetch(GOOGLE_FORM_ACTION, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    })
+    .then(function(){
+      status.textContent = 'Thank you — your submission has been received!';
+      status.className = 'nf-status ok';
+      form.reset();
+      document.querySelectorAll('.nf-seg-btn.active').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.nf-star.active').forEach(function(s){ s.classList.remove('active'); });
+      document.querySelectorAll('.nf-segmented').forEach(function(g){ delete g.dataset.selected; });
+      delete starGroup.dataset.selected;
+    })
+    .catch(function(){
+      status.textContent = 'Something went wrong — please try again or email us directly.';
+      status.className = 'nf-status err';
+    });
+  });
 })();
 </script>
 
