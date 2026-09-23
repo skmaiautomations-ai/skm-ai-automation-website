@@ -1,7 +1,12 @@
 [
   {
-    "name": "Sumeet molani",
+    "name": "Sumeet Molani",
     "logo": "images/Sumeet Kumar.jpg",
     "url": "https://www.linkedin.com/in/sumeet-kumar-b97086174/"
+  },
+  {
+    "name": "Danesh Kumar",
+    "logo": "images/Danesh kumar.jpg",
+    "url": "https://www.linkedin.com/in/danesh-kumar-17b599316/"
   }
 ]
